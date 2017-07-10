@@ -1,3 +1,5 @@
+# A general Dockerfile for deep learning, provided by https://github.com/floydhub/dl-docker/blob/master/Dockerfile.gpu
+
 FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
 
 MAINTAINER Sai Soundararaj <saip@outlook.com>

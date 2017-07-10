@@ -1,0 +1,7 @@
+create_dataset()
+
+save_bottleneck_features()
+
+train_top_model()
+
+predict_image(file_path) # where file_path is as expected

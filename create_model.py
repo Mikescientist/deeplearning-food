@@ -18,7 +18,7 @@ epochs = 200
 batch_size = 12
 
 
-def save_bottlebeck_features():
+def save_bottleneck_features():
     # Augment training data and normalise both to be in [0,1] 
     datagen1 = ImageDataGenerator(
         rotation_range=50,

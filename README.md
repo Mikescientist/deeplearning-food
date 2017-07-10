@@ -31,8 +31,16 @@ for the same reason.
 
 Finally, we can now use the function predict_model to input new data into the model to receive a classification. From my 
 experimentation with parameters, such as the size of the images, image augmentation and training/test set sizes, this model 
-has an accuracy of ~80-85%. This is not a bad result for code which only takes a small amount of time to run, but with more 
-time and analysis, I think this approach could gain some excellent results.
+has a validation accuracy of ~80-85%, depending on the dataset. The model also has a training accuracy that is approaching 
+100%, though. This suggests overfitting of the model and the model may not generalise well. In future models we can consider 
+more agressive dropout rates of the data, or other regularisation technieqs, but this may not be effective with such a small 
+training set.  This is not a bad result for code which only takes a small amount of time to run, but with more time and 
+analysis, I think this approach could gain some excellent results.
+
+The model could be used in production in the future if the accuracy of the model increased. Once the model is pre-training, a 
+user could run the predict_model() function with saved weights, where the input to the function is a photograph from the 
+user's camera. With increasing amounts of data, the model could be updated to further improve the accuracy and improve the 
+user's experience.
 
 Example running of the code:
 

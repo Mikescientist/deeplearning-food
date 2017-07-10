@@ -11,19 +11,19 @@ def create_dataset():
     urllib.urlretrieve(url, "../Python/images.zip")
 
     print('Extracting files')
-    z = zipfile.ZipFile("../Python/images.zip") # change to your desired directory
+    z = zipfile.ZipFile("../Python/images.zip")
     z.extractall()
 
 
-# create directory for dataset in your desired directory
+# create directory for dataset
 
     datapath = r'../Python/data/'
     trainpath = r'../Python/data/train/'
-    testpath = r'../Python/data/test/'
+    testpath = r'../Python/data/validation/'
     sandpath1 = r'../Python/data/train/sandwiches/'
     sushpath1 = r'../Python/data/train/sushi/'
-    sandpath2 = r'../Python/data/test/sandwiches/'
-    sushpath2 = r'../Python/data/test/sushi/'
+    sandpath2 = r'../Python/data/validation/sandwiches/'
+    sushpath2 = r'../Python/data/validation/sushi/'
 
 
     dir_list = [datapath, trainpath, testpath, sandpath1, sandpath2, sushpath1, sushpath2]
@@ -37,14 +37,12 @@ def create_dataset():
 
 
 # Randomize dataset
-
     random.shuffle(X)
     random.shuffle(Y)
 
 
-# Make a cross validation split of ~63/37 to create training and test set
-
-    training_no = 302
+# Make a cross validation split and create training and test set
+    training_no = 252
     for i in range(0, training_no):
         with open(path1 + X[i], 'rb') as f:
             img = f.read()

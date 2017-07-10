@@ -1,24 +1,24 @@
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing import image
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 from keras import optimizers
 
-# image dimensions
+# dimensions of our images.
 img_width, img_height = 225, 225
 
-top_model_weights_path = '../Python/bottleneck_fc_model.h5' # change to desired path
-train_data_dir = '../Python/data1/train/' # dataset directory from running create_dataset()
-validation_data_dir = '../Python/data1/validation/'
+top_model_weights_path = '../Python/bottleneck_fc_model.h5'
+train_data_dir = '../Python/data/train/'
+validation_data_dir = '../Python/data/validation/'
 nb_train_samples = 504
 nb_validation_samples = 300
 epochs = 200
 batch_size = 12
 
 
-def bottlebeck_features():
-    # generate augmented training set by adding flips/shears/rotations/translations. Rescale images into range [0,1].
+def save_bottlebeck_features():
     datagen1 = ImageDataGenerator(
         rotation_range=50,
         width_shift_range=0.1,
@@ -27,12 +27,11 @@ def bottlebeck_features():
         shear_range=0.1,
         vertical_flip=True,
         horizontal_flip=True)
-    # rescale test set into range [0,1]
-    datagen1 = ImageDataGenerator(rescale=1. / 255)
+    datagen2 = ImageDataGenerator(rescale=1. / 255)
 
-    # Use VGG16 network with imagenet weights. Don't include the top layer. 
+    # build the VGG16 network
     model = applications.VGG16(include_top=False, weights='imagenet')
-    # generate bottleneck features
+
     generator = datagen2.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
@@ -65,7 +64,7 @@ def train_top_model():
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
-    model.add(Dropout(0.45)) # dropout to avoid overfitting
+    model.add(Dropout(0.45))
     model.add(Dense(1, activation='sigmoid'))
     Adam = optimizers.Adamax(lr=0.001, beta_1=0.9, beta_2=0.999,
                              epsilon=1e-08, decay=0.001)
@@ -76,3 +75,27 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
+
+
+save_bottlebeck_features()
+train_top_model()
+
+
+def predict_image(file):
+    model = applications.VGG16(include_top=False, weights='imagenet')
+    x = image.load_img(file, target_size=(img_width, img_height))
+    x = image.img_to_array(x)
+    x = np.expand_dims(x, axis=0)
+    array = model.predict(x)
+    model = Sequential()
+    model.add(Flatten(input_shape=array.shape[1:]))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(1, activation='sigmoid'))
+    model.load_weights(top_model_weights_path)
+    class_predicted = model.predict_classes(array)
+    if class_predicted == 1:
+        print("sushi")
+    else:
+        print("sandwich")
+
